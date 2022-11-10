@@ -29,10 +29,15 @@ builder.Services.AddSwaggerGen(c => {
     c.OperationFilter<SecurityRequirementsOperationFilter>();
 });
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
+builder.Services.AddHttpContextAccessor();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddScoped<IAuthRepository, AuthRepositorycs>();
 builder.Services.AddScoped<IApiClinetService, ApiClientService>();
+builder.Services.AddScoped<IStockRepository, StockRepository>();
+
+builder.Services.AddAutoMapper(typeof(Program).Assembly);
+
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddJwtBearer(options =>
     {

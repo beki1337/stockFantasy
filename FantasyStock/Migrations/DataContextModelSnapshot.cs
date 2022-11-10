@@ -22,6 +22,120 @@ namespace FantasyStock.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder, 1L, 1);
 
+            modelBuilder.Entity("FantasyStock.Models.Portfolio", b =>
+                {
+                    b.Property<int>("PortfolioId")
+                        .HasColumnType("int");
+
+                    b.Property<double>("Available_funds")
+                        .HasColumnType("float");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<double>("Total_balance")
+                        .HasColumnType("float");
+
+                    b.HasKey("PortfolioId");
+
+                    b.ToTable("Portfolios");
+                });
+
+            modelBuilder.Entity("FantasyStock.Models.Stock", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<float>("Close")
+                        .HasColumnType("real");
+
+                    b.Property<float>("High")
+                        .HasColumnType("real");
+
+                    b.Property<float>("Low")
+                        .HasColumnType("real");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<float>("Open")
+                        .HasColumnType("real");
+
+                    b.Property<int?>("Stock_CompleteId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Symbol")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Time")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("Volume")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("Stock_CompleteId");
+
+                    b.ToTable("Stocks");
+                });
+
+            modelBuilder.Entity("FantasyStock.Models.Stock_Complete", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Ticket")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Stock_Complete");
+                });
+
+            modelBuilder.Entity("FantasyStock.Models.StockBounght", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<DateTime>("DateBought")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int?>("PortfolioId")
+                        .HasColumnType("int");
+
+                    b.Property<double>("price")
+                        .HasColumnType("float");
+
+                    b.Property<int>("stockId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("PortfolioId");
+
+                    b.HasIndex("stockId");
+
+                    b.ToTable("StockBounght");
+                });
+
             modelBuilder.Entity("FantasyStock.Models.User", b =>
                 {
                     b.Property<int>("Id")
@@ -29,6 +143,9 @@ namespace FantasyStock.Migrations
                         .HasColumnType("int");
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<int?>("Age")
+                        .HasColumnType("int");
 
                     b.Property<byte[]>("PasswordHash")
                         .IsRequired()
@@ -45,6 +162,55 @@ namespace FantasyStock.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Users");
+                });
+
+            modelBuilder.Entity("FantasyStock.Models.Portfolio", b =>
+                {
+                    b.HasOne("FantasyStock.Models.User", "User")
+                        .WithOne("Portfolio")
+                        .HasForeignKey("FantasyStock.Models.Portfolio", "PortfolioId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("FantasyStock.Models.Stock", b =>
+                {
+                    b.HasOne("FantasyStock.Models.Stock_Complete", null)
+                        .WithMany("stocks")
+                        .HasForeignKey("Stock_CompleteId");
+                });
+
+            modelBuilder.Entity("FantasyStock.Models.StockBounght", b =>
+                {
+                    b.HasOne("FantasyStock.Models.Portfolio", null)
+                        .WithMany("stocks")
+                        .HasForeignKey("PortfolioId");
+
+                    b.HasOne("FantasyStock.Models.Stock_Complete", "stock")
+                        .WithMany()
+                        .HasForeignKey("stockId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("stock");
+                });
+
+            modelBuilder.Entity("FantasyStock.Models.Portfolio", b =>
+                {
+                    b.Navigation("stocks");
+                });
+
+            modelBuilder.Entity("FantasyStock.Models.Stock_Complete", b =>
+                {
+                    b.Navigation("stocks");
+                });
+
+            modelBuilder.Entity("FantasyStock.Models.User", b =>
+                {
+                    b.Navigation("Portfolio")
+                        .IsRequired();
                 });
 #pragma warning restore 612, 618
         }

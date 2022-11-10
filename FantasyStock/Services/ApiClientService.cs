@@ -30,7 +30,7 @@ namespace FantasyStock.Services
         }
         static string GetUrl(string funktion, string keyword)
         {
-            string url = String.Format("https://www.alphavantage.co/query?function={0}&keywords={1}&apikey=Z4CT93FXJDPZHGNU", funktion, keyword);
+            string url = String.Format("https://www.alphavantage.co/query?function={0}&symbol={1}&apikey=Z4CT93FXJDPZHGNU", funktion, keyword);
             return url;
         }
 
@@ -50,12 +50,24 @@ namespace FantasyStock.Services
         public async Task<ServiceResponse<SerachEndpoint>> GetSymbol(string symbol)
         {
 
-            var searchQuary = await _context.SerachEndpoint.FirstOrDefaultAsync(c)
+            
             var serviceResponse = new ServiceResponse<SerachEndpoint> ();
             SerachEndpoint result = null;
             string url = GetUrl("SYMBOL_SEARCH", symbol);
             HttpRequest<SerachEndpoint> SerachStock = new HttpRequest<SerachEndpoint>();
             result =  await  SerachStock.ApiCall(url);
+            serviceResponse.Data = result;
+            return serviceResponse;
+        }
+
+        public async Task<ServiceResponse<StockQuote>> GetQuote(string symbol)
+        {
+            var serviceResponse = new ServiceResponse<StockQuote>();
+            StockQuote result = null;
+            string url = GetUrl("GLOBAL_QUOTE", symbol);
+            HttpRequest<StockQuote> StockQuot = new HttpRequest<StockQuote>();
+            result = await StockQuot.ApiCall(url);
+            Console.WriteLine(result);
             serviceResponse.Data = result;
             return serviceResponse;
         }

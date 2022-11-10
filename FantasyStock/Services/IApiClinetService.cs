@@ -10,5 +10,7 @@ namespace FantasyStock.Services
         Task<StockDto> CallApi(string ticket);
 
         Task<ServiceResponse<SerachEndpoint>> GetSymbol(string symbol);
+
+        Task<ServiceResponse<StockQuote>> GetQuote(string symbol);
     }
 }

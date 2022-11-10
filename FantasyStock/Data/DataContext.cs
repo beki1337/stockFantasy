@@ -1,6 +1,11 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using FantasyStock.Models;
-using FantasyStock.Models.ApiClient;
+using System.Linq;
+
+using Newtonsoft.Json;
+using System.Data;
+using System.Data;
+using FantasyStock.Models;
 
 namespace FantasyStock.Data
 {
@@ -8,10 +13,13 @@ namespace FantasyStock.Data
     {
         public DataContext(DbContextOptions<DataContext> options) : base(options)
         {
-
+      
         }
-
+       
+      
         public DbSet<User> Users { get; set; }
-        public DbSet<SerachEndpoint> SerachEndpoints { get; set; }
+       
+        public DbSet<Portfolio> Portfolios { get; set; }
+        public DbSet<Stock> Stocks { get; set; }
     }
 }
